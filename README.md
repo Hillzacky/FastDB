@@ -15,7 +15,7 @@ DB_PASSWORD=
 ### Use
 Show Data
 ```php
-DB::get("select query", ["key" => "value"], PDO::FETCH_ASSOC);
+DB::get("SELECT * FROM `table_name` ORDER BY `column_name` :sort", [":sort" => "DESC"], PDO::FETCH_ASSOC);
 ```
 
 Insert Data
