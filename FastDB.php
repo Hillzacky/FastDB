@@ -57,11 +57,6 @@
 		return DB::connect()->exec("DELETE FROM $t WHERE $w LIMIT $l");
 	}
   
-	static function showDB($t)
-	{
-		return DB::connect()->exec("SHOW TABLES");
-	}
-  
 	static function show($t)
 	{
 		$use = 'USE '.$c['DB_NAME'].';';
