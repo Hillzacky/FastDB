@@ -20,7 +20,7 @@ DB::get("select query", ["key" => "value"], PDO::FETCH_ASSOC);
 
 Insert Data
 ```php
-DB::add("table_name", ["field_name" => "value"], PDO::FETCH_ASSOC);
+DB::add("table_name", ["field_name" => "value"]);
 ```
 
 Update Data
