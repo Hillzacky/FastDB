@@ -1,6 +1,18 @@
 # FastDB
 Fast Code Helper for Integration Database PHP
 
+
+### Configuration
+Example .env.example
+```
+DB_DRIVER=mysql
+DB_HOST=localhost
+DB_NAME=information_schema
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### Use
 Show Data
 ```php
 DB::get("select query", ["key" => "value"], PDO::FETCH_ASSOC);
@@ -21,7 +33,7 @@ Delete Data
 DB::del("table_name", "id=1");
 ```
 
-Show
+Show for Audit
 ```php
 DB::show("tables");
 ```
