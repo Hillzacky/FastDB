@@ -25,12 +25,11 @@
 		$s = DB::connect()->prepare($q);
 		foreach ($p as $k => $v) $s->bindValue("$k", $v);
 		if (!$s->execute()) {
-      printf($s->error);
-    } else {
-      $s->store_result();
-      return ($s->num_rows > 0) ? $s->fetchAll($m) : json_encode(["message"=>"no data"]);
-    }
-    $s->close();
+      		printf($s->error);
+    		} else {
+      		$s->store_result();
+      		return ($s->num_rows > 0) ? $s->fetchAll($m) : json_encode(["message"=>"no data"]);
+    		} $s->close();
 	}
 		
 	static function add($t, $d)
@@ -58,9 +57,20 @@
 		return DB::connect()->exec("DELETE FROM $t WHERE $w LIMIT $l");
 	}
   
-	static function show($t)
+	static function showDB($t)
 	{
 		return DB::connect()->exec("SHOW TABLES");
+	}
+  
+	static function show($t)
+	{
+		$use = 'USE '.$c['DB_NAME'].';';
+		switch($t){
+			case "db": $q = 'SHOW DATABASES';break;
+			case "tables": $q = $use.'SHOW TABLES';break;
+			case "mytables": $q = $use.'SELECT table_name FROM all_tables';break;
+		}
+		return DB::connect()->exec($q);
 	}
   
 	static function repair($t)
