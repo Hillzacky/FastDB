@@ -20,7 +20,26 @@
     }
   }
 
-	static function get($q, $p=[], $m=PDO::FETCH_ASSOC)
+ static function raw($c, $fetch){
+  switch($fetch){
+   case 'object':
+			$o = PDO::FETCH_OBJ;
+   break;
+   case 'array':
+			$o = PDO::FETCH_ASSOC;
+   break;
+   case 'row':
+			$o = PDO::FETCH_NUM;
+   break;
+   default:
+			$o = PDO::FETCH_BOTH;
+   break;
+  }
+		if($fetch == 'json') return json_encode($c->fetchAll(PDO::FETCH_ASSOC));
+		return $c->fetchAll($o);
+ }
+
+	static function get($q, $p=[], $m='array')
 	{
 		$s = DB::connect()->prepare($q);
 		foreach ($p as $k => $v) $s->bindValue("$k", $v);
@@ -28,7 +47,7 @@
       		printf($s->error);
     		} else {
       		$s->store_result();
-      		return ($s->num_rows > 0) ? $s->fetchAll($m) : json_encode(["message"=>"no data"]);
+      		return ($s->num_rows > 0) ? self::raw($s, $m) : json_encode(["message"=>"no data"]);
     		} $s->close();
 	}
 		
