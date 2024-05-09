@@ -18,6 +18,11 @@ Show Data
 DB::get("SELECT * FROM `table_name` ORDER BY `column_name` :sort", [":sort" => "DESC"], 'json');
 ```
 
+Search Data
+```php
+DB::get("SELECT * FROM `table_name` WHERE `name` LIKE `%:name%`", [":name" => "Hillzacky"], 'json');
+```
+
 Insert Data
 ```php
 DB::add("table_name", ["field_name" => "value"]);
