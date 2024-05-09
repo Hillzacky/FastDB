@@ -9,4 +9,9 @@ $sql = "CREATE TABLE users (
   updated_at TIMESTAMP
   )";
 
-DB::connect()->exec($sql);
+try {
+  DB::connect()->exec($sql);
+  echo "Table users created successfully";
+} catch(PDOException $e) {
+  echo $sql . "<br>" . $e->getMessage();
+}
