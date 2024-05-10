@@ -1,10 +1,10 @@
 <?php class Mysql {
 
-private static $host = $_ENV['DB_HOST'];
-private static $database = $_ENV['DB_NAME'];
-private static $user = $_ENV['DB_USER'];
-private static $pass = $_ENV['DB_PASS'];
-private static $dir = dirname(__FILE__);
+ private static $host = $_ENV['DB_HOST'];
+ private static $database = $_ENV['DB_NAME'];
+ private static $user = $_ENV['DB_USER'];
+ private static $pass = $_ENV['DB_PASS'];
+ private static $dir = dirname(__FILE__);
 
  static function dump($output){
   exec("mysqldump --user={self::$user} --password={self::$pass} --host={self::$host} {self::$database} --result-file={$dir} 2>&1", $output);
@@ -86,17 +86,14 @@ private static $dir = dirname(__FILE__);
   $query = '';
   $sqlScript = file($dbfile);
   foreach ($sqlScript as $line)	{	
-	  $startWith = substr(trim($line), 0 ,2);
-	  $endWith = substr(trim($line), -1 ,1);
-	  if (empty($line) || $startWith == '--' || $startWith == '/*' || $startWith == '//') {
-   	 continue;
-	  }
-   $query = $query . $line;
-   if ($endWith == ';') {
-    mysqli_query(self::connect(),$query)
-    or die('Problem : <b>'.$query.'</b>');
-    $query= '';		
-	  }
+   $startWith = substr(trim($line), 0 ,2);
+   $endWith = substr(trim($line), -1 ,1);
+   if (empty($line) || $startWith == '--' || $startWith == '/*' || $startWith == '//') continue;
+    $query = $query . $line;
+    if ($endWith == ';') {
+     mysqli_query(self::connect(),$query) or die('Problem : <b>'.$query.'</b>');
+     $query= '';
+    }
   }
  }
 
@@ -131,17 +128,17 @@ static function restoreMysqlDB($filePath){
  return $response;
 }
 
-static function receive($inputname){
- if (!empty($_FILES)) {
-  if (!in_array(strtolower(pathinfo($_FILES[$inputname]["name"], PATHINFO_EXTENSION)), ["sql"])) {
-    $response = [ "type" => "error", "message" => "Invalid File Type" ];
-  } else {
+ static function receive($inputname){
+  if (!empty($_FILES)) {
+   if (!in_array(strtolower(pathinfo($_FILES[$inputname]["name"], PATHINFO_EXTENSION)), ["sql"])) {
+     $response = [ "type" => "error", "message" => "Invalid File Type" ];
+   } else {
     if (is_uploaded_file($_FILES[$inputname]["tmp_name"])) {
         move_uploaded_file($_FILES[$inputname]["tmp_name"], $_FILES[$inputname]["name"]);
         $response = restoreMysqlDB($_FILES[$inputname]["name"]);
     }
+   }
   }
  }
-}
 
 }
