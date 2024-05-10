@@ -100,4 +100,53 @@ private static $dir = dirname(__FILE__);
   }
  }
 
+static function restoreMysqlDB($filePath){
+ $sql = '';
+ $error = '';    
+ if (file_exists($filePath)) {
+  $lines = file($filePath);        
+  foreach ($lines as $line) {
+   if (substr($line, 0, 2) == '--' || $line == '') {
+    continue;
+   }    
+   $sql .= $line;      
+   if (substr(trim($line), - 1, 1) == ';') {
+    $result = mysqli_query($conn, $sql);
+     if (! $result) {
+      $error .= mysqli_error(self::connection()) . "\n";
+     }
+    $sql = '';
+   }
+  }
+  if ($error) {
+   $response = ["type" => "error","message" => $error ];
+  } else {
+   $response = [
+    "code" => 200,
+    "type" => "success",
+    "message" => "Database Restore Completed Successfully."
+   ];
+  }
+ }
+ return $response;
+}
+
+static function receive(){
+ if (! empty($_FILES)) {
+  if (! in_array(strtolower(pathinfo($_FILES["backup_file"]["name"], PATHINFO_EXTENSION)), array(
+        "sql"
+    ))) {
+        $response = array(
+            "type" => "error",
+            "message" => "Invalid File Type"
+        );
+    } else {
+        if (is_uploaded_file($_FILES["backup_file"]["tmp_name"])) {
+            move_uploaded_file($_FILES["backup_file"]["tmp_name"], $_FILES["backup_file"]["name"]);
+            $response = restoreMysqlDB($_FILES["backup_file"]["name"]);
+        }
+    }
+ }
+}
+
 }
