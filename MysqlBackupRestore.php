@@ -41,24 +41,24 @@ private static $dir = dirname(__FILE__);
   $fileString .= "\n\n" . $row[1] . ";\n\n"; 
   $sqlQuery = "SELECT * FROM " . $tableName;
   $result = mysqli_query(self::connect(), $sqlQuery);     
-       $fieldCount = mysqli_num_fields($result);
-        for ($i = 0; $i < $fieldCount; $i ++) {
-         while ($row = mysqli_fetch_row($result)) {
-          $fileString .= "INSERT INTO $tableName VALUES(";
-           for ($j = 0; $j < $fieldCount; $j ++) {
-            $row[$j] = $row[$j];   
-             if (isset($row[$j])) {
-              $fileString .= '"' . $row[$j] . '"';
-             } else {
-               $fileString .= '""';
-             }
-             if ($j < ($fieldCount - 1)) {
-              $fileString .= ',';
-             }
-           }
-           $fileString .= ");\n";
-          }
-        }
+  $fieldCount = mysqli_num_fields($result);
+  for ($i = 0; $i < $fieldCount; $i ++) {
+   while ($row = mysqli_fetch_row($result)) {
+    $fileString .= "INSERT INTO $tableName VALUES(";
+     for ($j = 0; $j < $fieldCount; $j ++) {
+      $row[$j] = $row[$j];   
+       if (isset($row[$j])) {
+        $fileString .= '"' . $row[$j] . '"';
+       } else {
+         $fileString .= '""';
+       }
+       if ($j < ($fieldCount - 1)) {
+        $fileString .= ',';
+       }
+     }
+     $fileString .= ");\n";
+    }
+  }
   $fileString .= "\n";
   return $fileString;
  }
@@ -131,19 +131,16 @@ static function restoreMysqlDB($filePath){
  return $response;
 }
 
-static function receive(){
+static function receive($inputname){
  if (!empty($_FILES)) {
-  if (!in_array(strtolower(pathinfo($_FILES["backup_file"]["name"], PATHINFO_EXTENSION)), ["sql"])) {
-        $response = array(
-            "type" => "error",
-            "message" => "Invalid File Type"
-        );
-    } else {
-        if (is_uploaded_file($_FILES["backup_file"]["tmp_name"])) {
-            move_uploaded_file($_FILES["backup_file"]["tmp_name"], $_FILES["backup_file"]["name"]);
-            $response = restoreMysqlDB($_FILES["backup_file"]["name"]);
-        }
+  if (!in_array(strtolower(pathinfo($_FILES[$inputname]["name"], PATHINFO_EXTENSION)), ["sql"])) {
+    $response = [ "type" => "error", "message" => "Invalid File Type" ];
+  } else {
+    if (is_uploaded_file($_FILES[$inputname]["tmp_name"])) {
+        move_uploaded_file($_FILES[$inputname]["tmp_name"], $_FILES[$inputname]["name"]);
+        $response = restoreMysqlDB($_FILES[$inputname]["name"]);
     }
+  }
  }
 }
 
