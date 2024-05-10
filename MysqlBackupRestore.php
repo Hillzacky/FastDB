@@ -81,4 +81,23 @@ private static $dir = dirname(__FILE__);
   readfile($filename);
   exec('rm ' . $filename); 
  }
+
+ static function restore($dbfile = 'dbfile.sql'){
+  $query = '';
+  $sqlScript = file('database-script.sql');
+  foreach ($sqlScript as $line)	{	
+	  $startWith = substr(trim($line), 0 ,2);
+	  $endWith = substr(trim($line), -1 ,1);
+	  if (empty($line) || $startWith == '--' || $startWith == '/*' || $startWith == '//') {
+   	 continue;
+	  }
+   $query = $query . $line;
+   if ($endWith == ';') {
+    mysqli_query(self::connect(),$query)
+    or die('Problem : <b>'.$query.'</b>');
+    $query= '';		
+	  }
+  }
+ }
+
 }
