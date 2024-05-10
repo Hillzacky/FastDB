@@ -132,10 +132,8 @@ static function restoreMysqlDB($filePath){
 }
 
 static function receive(){
- if (! empty($_FILES)) {
-  if (! in_array(strtolower(pathinfo($_FILES["backup_file"]["name"], PATHINFO_EXTENSION)), array(
-        "sql"
-    ))) {
+ if (!empty($_FILES)) {
+  if (!in_array(strtolower(pathinfo($_FILES["backup_file"]["name"], PATHINFO_EXTENSION)), ["sql"])) {
         $response = array(
             "type" => "error",
             "message" => "Invalid File Type"
