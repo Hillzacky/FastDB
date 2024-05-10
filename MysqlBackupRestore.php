@@ -4,6 +4,7 @@ private static $host = $_ENV['DB_HOST'];
 private static $database = $_ENV['DB_NAME'];
 private static $user = $_ENV['DB_USER'];
 private static $pass = $_ENV['DB_PASS'];
+private static $dir = dirname(__FILE__);
 
  static function dump($output){
   exec("mysqldump --user={self::$user} --password={self::$pass} --host={self::$host} {self::$database} --result-file={$dir} 2>&1", $output);
@@ -11,7 +12,7 @@ private static $pass = $_ENV['DB_PASS'];
  }
 
  static function connect(){
-  $conn = mysqli_connect($this->host, $this->user, $this->password, $this->database);
+  $conn = mysqli_connect(self::$host, self::$user, self::$pass, self::$database);
   $conn->set_charset("utf8");
   return $conn ?? new Database();
  }
