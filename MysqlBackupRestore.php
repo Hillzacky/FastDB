@@ -84,7 +84,7 @@ private static $dir = dirname(__FILE__);
 
  static function restore($dbfile = 'dbfile.sql'){
   $query = '';
-  $sqlScript = file('database-script.sql');
+  $sqlScript = file($dbfile);
   foreach ($sqlScript as $line)	{	
 	  $startWith = substr(trim($line), 0 ,2);
 	  $endWith = substr(trim($line), -1 ,1);
