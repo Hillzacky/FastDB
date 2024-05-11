@@ -5,6 +5,7 @@
 }
 
 class Fields {
+    private $table;
     private $tableName;
     private $fields = [];
 
