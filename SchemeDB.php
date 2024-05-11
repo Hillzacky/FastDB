@@ -12,6 +12,12 @@ class Fields {
         $this->tableName = $tableName;
     }
 
+    public static function table($tableName) {
+        $instance = new self();
+        $instance->table = $tableName;
+        return $instance;
+    }
+
     public function increments($fieldName, $length=255) {
         $this->fields[] = "$fieldName INT($length) AUTO_INCREMENT PRIMARY KEY";
         return $this;
@@ -57,6 +63,21 @@ class Fields {
         return $this;
     }
 
+    public function nullable() {
+        $this->fields[count($this->fields) - 1] .= " NULL";
+        return $this;
+    }
+
+    public function default($defaultValue) {
+        $this->fields[count($this->fields) - 1] .= " DEFAULT $defaultValue";
+        return $this;
+    }
+
+    public function primary() {
+        $this->fields[count($this->fields) - 1] .= " PRIMARY KEY";
+        return $this;
+    }
+
     public function create($engine='InnoDB') {
         $sql = "CREATE TABLE IF NOT EXISTS $this->tableName (";
         $sql .= implode(", ", $this->fields);
@@ -80,9 +101,9 @@ class Fields {
 
 /** Contoh penggunaan
 $fields = MariaDB::table("products");
-$fields->increments("productId");
-$fields->char("name", 30);
-$fields->integer("price", 255);
+$fields->increments("productId")->primary();
+$fields->char("name", 30)->nullable();
+$fields->integer("price", 255)->default(1000);
 $fields->dateTime("created_at");
 $fields->create();
 **/
