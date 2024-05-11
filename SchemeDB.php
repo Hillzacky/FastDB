@@ -32,6 +32,11 @@ class Fields {
         return $this;
     }
 
+    public function timeStamp($fieldName) {
+        $this->fields[] = "$fieldName TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
+        return $this;
+    }
+
     public function text($fieldName) {
         $this->fields[] = "$fieldName TEXT";
         return $this;
@@ -42,10 +47,30 @@ class Fields {
         return $this;
     }
 
-    public function create() {
+    public function unique($fieldName) {
+        $this->fields[] = "$fieldName UNIQUE";
+        return $this;
+    }
+
+    public function foreign($fieldName) {
+        $this->fields[] = "$fieldName FOREIGN KEY";
+        return $this;
+    }
+
+    public function create($engine='InnoDB') {
         $sql = "CREATE TABLE IF NOT EXISTS $this->tableName (";
         $sql .= implode(", ", $this->fields);
-        $sql .= ");";
+        $sql .= ") ENGINE=$engine;";
+
+        DB::exec($sql);
+
+        echo "SQL Query: $sql";
+    }
+
+    public function replace($engine='InnoDB') {
+        $sql = "CREATE OR REPLACE TABLE $this->tableName (";
+        $sql .= implode(", ", $this->fields);
+        $sql .= ") ENGINE=$engine;";
 
         DB::exec($sql);
 
