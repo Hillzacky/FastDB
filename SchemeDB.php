@@ -1,16 +1,14 @@
-<?php class MariaDB {
-    public static function table($tableName) {
-        return new Fields($tableName);
-    }
-}
-
-class Fields {
+<?php class MariaDB
+{
     private $table;
-    private $tableName;
     private $fields = [];
 
-    public function __construct($tableName) {
-        $this->tableName = $tableName;
+    public static function execute($sql) {
+        DB::exec($sql);
+    }
+    
+    public static function drop($tableName) {
+        $sql = "DROP TABLE IF EXISTS `$tableName`";
     }
 
     public static function table($tableName) {
@@ -20,7 +18,7 @@ class Fields {
     }
 
     public function increments($fieldName, $length=255) {
-        $this->fields[] = "$fieldName INT($length) AUTO_INCREMENT PRIMARY KEY";
+        $this->fields[] = "$fieldName INT($length) AUTO_INCREMENT";
         return $this;
     }
 
@@ -55,12 +53,12 @@ class Fields {
     }
 
     public function unique($fieldName) {
-        $this->fields[] = "$fieldName UNIQUE";
+        $this->fields[count($this->fields) - 1] .= " UNIQUE";
         return $this;
     }
 
     public function foreign($fieldName) {
-        $this->fields[] = "$fieldName FOREIGN KEY";
+        $this->fields[count($this->fields) - 1] .= " FOREIGN KEY";
         return $this;
     }
 
@@ -69,8 +67,8 @@ class Fields {
         return $this;
     }
 
-    public function default($defaultValue) {
-        $this->fields[count($this->fields) - 1] .= " DEFAULT $defaultValue";
+    public function default($val) {
+        $this->fields[count($this->fields) - 1] .= " DEFAULT $val";
         return $this;
     }
 
@@ -84,9 +82,7 @@ class Fields {
         $sql .= implode(", ", $this->fields);
         $sql .= ") ENGINE=$engine;";
 
-        DB::exec($sql);
-
-        echo "SQL Query: $sql";
+        self::execute($sql);
     }
 
     public function replace($engine='InnoDB') {
@@ -94,9 +90,7 @@ class Fields {
         $sql .= implode(", ", $this->fields);
         $sql .= ") ENGINE=$engine CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;";
 
-        DB::exec($sql);
-
-        echo "SQL Query: $sql";
+        self::execute($sql);
     }
 }
 
