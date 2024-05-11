@@ -70,7 +70,7 @@ class Fields {
     public function replace($engine='InnoDB') {
         $sql = "CREATE OR REPLACE TABLE $this->tableName (";
         $sql .= implode(", ", $this->fields);
-        $sql .= ") ENGINE=$engine;";
+        $sql .= ") ENGINE=$engine CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;";
 
         DB::exec($sql);
 
