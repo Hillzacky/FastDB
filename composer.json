@@ -1,0 +1,23 @@
+{
+    "name": "hillzacky/fastdb",
+    "description": "Library for implementation database.",
+    "type": "library",
+    "require": {},
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Hillzacky\\FastDB\\": "src/"
+        },
+        "files": [
+            "src/registers.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Hilmansyah",
+            "email": "hilmansyah.amd.kom@icloud.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "extra": {}
+}
